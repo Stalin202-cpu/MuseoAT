@@ -9,7 +9,7 @@
       <h4 class="mb-0"><i class="fas fa-edit"></i> Editar Monumento</h4>
     </div>
     <div class="card-body">
-      <form action="/procesarEdicionMonumento" method="post" enctype="multipart/form-data" id="frm_editar_monumento">
+      <form action="/procesarEdicionMonumento" method="posts" enctype="multipart/form-data" id="frm_editar_monumento">
         {% csrf_token %}
         <input type="hidden" name="id" value="{{ monumentoEditar.id }}">
 
