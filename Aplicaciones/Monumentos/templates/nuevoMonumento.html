@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Nuevo Monumento{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0"><i class="fas fa-landmark"></i> Registrar Nuevo Monumento</h4>
+    </div>
+    <div class="card-body">
+      <form action="/guardarMonumento" method="post" enctype="multipart/form-data" id="form_monumento">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label for="nombre" class="form-label"><i class="fas fa-font"></i> Nombre</label>
+          <input type="text" name="nombre" id="nombre" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="descripcion" class="form-label"><i class="fas fa-align-left"></i> Descripción</label>
+          <textarea name="descripcion" id="descripcion" class="form-control" rows="3" required></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="ubicacion" class="form-label"><i class="fas fa-map-marker-alt"></i> Ubicación</label>
+          <input type="text" name="ubicacion" id="ubicacion" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="logo" class="form-label"><i class="fas fa-image"></i> Logotipo (imagen)</label>
+          <input type="file" name="logo" id="logo" class="form-control" accept="image/*">
+        </div>
+
+        <div class="mb-3">
+          <label for="documento_pdf" class="form-label"><i class="fas fa-file-pdf"></i> Documento PDF (opcional)</label>
+          <input type="file" name="documento_pdf" id="documento_pdf" class="form-control" accept=".pdf">
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <a href="{% url 'inicio' %}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Cancelar</a>
+          <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar Monumento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  $("#form_monumento").validate({
+    rules: {
+      "nombre":{
+        required: true,
+        minlength: 5,
+        maxlength: 20
+      },
+      "descripcion":{
+        required: true,
+      },
+      "ubicacion":{
+        required: true,
+      }
+    },
+    messages: {
+      "nombre": {
+        required: "Por favor, ingrese el nombre. Este campo es obligatorio.",
+        minlength: "El nombre debe tener al menos 5 caracteres.",
+        maxlength: "El nombre debe tener como máximo 20 caracteres."
+      },
+      "descripcion": {
+        required: "Por favor, ingrese la descripcion del monumento.",
+      },
+      "ubicacion": {
+        required: "Por favor, ingrese la ubicacion del monumento.",
+      },
+    }
+
+
+  });
+</script>
+<script>
+    $("#logo").fileinput({
+            //language: "es",
+            allowedFileExtensions: ["png", "jpg", "jpeg"],
+            showCaption: false,
+            dropZoneEnabled: true,
+            showClose: false
+    });
+</script>
+<script>
+    $("#documento_pdf").fileinput({
+            //language: "es",
+            allowedFileExtensions: ["pdf"],
+            showCaption: false,
+            dropZoneEnabled: true,
+            showClose: false
+    });
+</script>
+{% endblock %}

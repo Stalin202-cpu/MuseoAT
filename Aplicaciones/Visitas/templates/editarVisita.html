@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Visita Guiada{% endblock %}
+
+{% block contenido %}
+<div class="container mt-4">
+  <div class="card shadow p-4">
+    <h2 class="mb-4 text-center">Editar Visita Guiada</h2>
+
+    <form method="POST" action="/procesarEdicionVisita" enctype="multipart/form-data" id="frm_editar_visita">
+      {% csrf_token %}
+      <input type="hidden" name="id" value="{{ visita.id }}">
+
+      <div class="mb-3">
+        <label class="form-label">Monumento:</label>
+        <select name="monumento" class="form-select">
+          {% for monumento in monumentos %}
+            <option value="{{ monumento.id }}" {% if visita.monumento.id == monumento.id %}selected{% endif %}>
+              {{ monumento.nombre }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Fecha (texto libre):</label>
+        <input type="text" name="fecha" class="form-control" value="{{ visita.fecha }}">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Guía:</label>
+        <input type="text" name="guia" class="form-control" value="{{ visita.guia }}">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Foto actual del guía:</label><br>
+        {% if visita.logo %}
+          <img src="{{ visita.logo.url }}" alt="Foto del guía" class="img-thumbnail" style="max-height: 120px;">
+        {% else %}
+          <p class="text-muted">No tiene imagen subida.</p>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Cambiar imagen:</label>
+        <input type="file" class="form-control" name="logo" id="logo" accept="image/*">
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar Cambios</button>
+        <a href="/inicio2" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver al listado</a>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  $("#frm_editar_visita").validate({
+    rules: {
+      "monumento":{
+        required: true,
+      },
+
+      "fecha":{
+        required: true,
+      },
+      "guia":{
+        required: true,
+      },
+    },
+    messages: {
+      "monumento":{
+        required: "Por favor, cambie el monumento que quiere visitar",
+      },
+      "fecha": {
+        required: "Por favor, ingrese la fecha. Este campo es obligatorio.",
+      },
+      "guia": {
+        required: "Por favor, ingrese el nombre del nuevo guia.",
+      },
+    }
+  });
+</script>
+<script>
+    $("#logo").fileinput({
+            //language: "es",
+            allowedFileExtensions: ["png", "jpg", "jpeg"],
+            showCaption: false,
+            dropZoneEnabled: true,
+            showClose: false
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Monumento{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+  <div class="card shadow-lg">
+    <div class="card-header bg-warning text-dark">
+      <h4 class="mb-0"><i class="fas fa-edit"></i> Editar Monumento</h4>
+    </div>
+    <div class="card-body">
+      <form action="/procesarEdicionMonumento" method="post" enctype="multipart/form-data" id="frm_editar_monumento">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ monumentoEditar.id }}">
+
+        <div class="mb-3">
+          <label for="nombre" class="form-label"><i class="fas fa-font"></i> Nombre</label>
+          <input type="text" name="nombre" id="nombre" value="{{ monumentoEditar.nombre }}" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="descripcion" class="form-label"><i class="fas fa-align-left"></i> Descripción</label>
+          <textarea name="descripcion" id="descripcion" class="form-control" rows="3" required>{{ monumentoEditar.descripcion }}</textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="ubicacion" class="form-label"><i class="fas fa-map-marker-alt"></i> Ubicación</label>
+          <input type="text" name="ubicacion" id="ubicacion" value="{{ monumentoEditar.ubicacion }}" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label"><i class="fas fa-image"></i> Foto actual:</label><br>
+          {% if monumentoEditar.logo %}
+            <img src="{{ monumentoEditar.logo.url }}" height="100" class="img-thumbnail mb-2" style="max-height: 120px;">
+          {% else %}
+            <p class="text-muted">No tiene imagen subida.</p>
+          {% endif %}
+          <input type="file" class="form-control" name="logo" id="logo" accept="image/*">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label"><i class="fas fa-file-pdf"></i> Documento PDF actual:</label><br>
+          {% if monumentoEditar.documento_pdf %}
+            <a href="{{ monumentoEditar.documento_pdf.url }}" target="_blank" class="btn btn-outline-danger btn-sm mb-2">
+              <i class="fas fa-file-pdf"></i> Ver PDF actual
+            </a>
+          {% else %}
+            <p class="text-muted">No hay documento PDF.</p>
+          {% endif %}
+          <input type="file" name="documento_pdf" id="documento_pdf" class="form-control" accept=".pdf">
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <a href="{% url 'inicio' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Cancelar
+          </a>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Guardar Cambios
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  $("#frm_editar_monumento").validate({
+    rules: {
+      "nombre":{
+        required: true,
+        minlength: 5,
+        maxlength: 100
+      },
+      "descripcion":{
+        required: true,
+      },
+      "ubicacion":{
+        required: true,
+      }
+    },
+    messages: {
+      "nombre": {
+        required: "Por favor, ingrese el nombre. Este campo es obligatorio.",
+        minlength: "El nombre debe tener al menos 5 caracteres.",
+        maxlength: "El nombre debe tener como máximo 20 caracteres."
+      },
+      "descripcion": {
+        required: "Por favor, ingrese la descripcion del monumento.",
+      },
+      "ubicacion": {
+        required: "Por favor, ingrese la ubicacion del monumento.",
+      },
+    }
+
+
+  });
+
+</script>
+<script>
+    $("#logo").fileinput({
+            //language: "es",
+            allowedFileExtensions: ["png", "jpg", "jpeg"],
+            showCaption: false,
+            dropZoneEnabled: true,
+            showClose: false
+    });
+</script>
+<script>
+    $("#documento_pdf").fileinput({
+            //language: "es",
+            allowedFileExtensions: ["pdf"],
+            showCaption: false,
+            dropZoneEnabled: true,
+            showClose: false
+    });
+</script>
+{% endblock %}
